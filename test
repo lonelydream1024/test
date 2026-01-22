@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lonely Dream</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            width: 100vw;
+            height: auto;
+            background: linear-gradient(#00CCFF, #35D7FF, #69E2FF, #9EECFF, #D2F7FF);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .night-mode {
+            background: linear-gradient(to bottom, #000326, #001832, #003458, #2d6283, #6495ad);
+        }
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: transparent;
+            overflow: hidden;
+            display: none;
+        }
+
+        .night-mode .stars {
+            display: block;
+            background: transparent;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background-color: white;
+            opacity: 0.8;
+        }
+
+        .star.yellow {
+            background-color: #ffff99;
+        }
+
+
+        #bigbox {
+            width: auto;
+            height: auto;
+            background-color: lightgray;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            border-radius: 0;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        h1.title {
+            font-family: 'Nanum Gothic', sans-serif !important;
+            font-size: 60px;
+            color: black;
+            margin: 30px 0;
+            text-align: center;
+            user-select: none;
+        }
+
+        #titlebar {
+            height: 28px;
+            background-color: #156082;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 6px;
+            font-size: 14px;
+            border-bottom: 2px solid #404040;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+
+        #ie-box {
+            background-color: white;
+            border: 2px solid #B0B0B0;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.15), inset 0 0 10px rgba(255,255,255,0.9);
+            border-radius: 4px;
+            margin: 8px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #004080;
+            padding: 0 20px 20px;
+            height: calc(540px - 28px - 50px - 16px);
+            width: calc(960px - 16px);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* 제목은 위에 고정 */
+            padding: 20px;
+        }
+
+        #taskbar {
+            height: 50px;
+            background: #C0C0C0;
+            border-top: 2px solid white;
+            border-left: 2px solid white;
+            border-bottom: 2px solid #404040;
+            border-right: 2px solid #404040;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: inset 1px 1px 0 #fff,
+                        inset -1px -1px 0 #404040;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .taskbar-left {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .taskbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-btn {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            user-select: none;
+        }
+
+        .social-btn img {
+            width: 16px;
+            height: 16px;
+            pointer-events: none;
+        }
+
+        .social-btn:active {
+            border-style: inset;
+        }
+
+        #clock {
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            padding: 5px 10px;
+            border-left: 2px solid #808080;
+            color: black;
+            user-select: none;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .window-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .win-btn {
+            width: 20px;
+            height: 20px;
+            background-color: #C0C0C0;
+            border: 2px outset #fff;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .win-btn.minimize::before {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 2px;
+            background: black;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+        }
+
+        .win-btn.maximize::before {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-sizing: border-box;
+            border-style: solid;
+            border-width: 3px 1px 1px 1px;
+            border-color: black;
+        }
+
+        .win-btn.close::before,
+        .win-btn.close::after {
+            content: "";
+            position: absolute;
+            width: 2px;
+            height: 12px;
+            background: black;
+            top: 50%;
+            left: 50%;
+            transform-origin: center;
+        }
+
+        .win-btn.close::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .win-btn.close::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 80px;
+            background: white;
+            opacity: 0.7;
+            transform: rotate(315deg);
+            animation: shooting 1s ease-out forwards;
+            z-index: 1;
+        }
+        .title {
+            font-size: 32px;
+            text-align: center;
+            margin: 20px 0 10px;
+            flex-shrink: 0;
+        }
+
+        .icon-grid-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center; /* 세로 중앙 정렬 */
+            justify-content: center;
+            padding-bottom: 20px;
+        }
+
+        .icon-grid {
+            display: flex;
+            width: 100%;
+            max-height: 200px;
+        }
+
+        .icon-cell {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-icon {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            cursor: pointer;
+        }
+        .small-icon {
+            width: 120px;
+            height: 120px;
+        }
+        .social-btn.win-btn {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        @keyframes shooting {
+            0% {
+                transform: translate(0, 0) rotate(315deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(300px, 300px) rotate(315deg);
+                opacity: 0;
+            }
+        }
+        @media (max-width: 768px) {
+            #bigbox {
+                width: 90vw;
+                height: auto;
+                flex-direction: column;
+                overflow: hidden;
+                position: relative;
+            }
+
+            h1.title {
+                font-size: 36px;
+                margin: 20px 0 16px;            
+            }
+
+            #ie-box {
+                width: calc(100% - 16px);
+                height: calc(100% - 28px - 50px - 10px); /* 기존보다 더 넉넉하게 */                
+                padding: 10px;
+                
+                overflow: hidden;
+            }
+
+            #taskbar {
+                height: 50px;
+                font-size: 12px;
+                flex-shrink: 0;
+            }
+            .taskbar-left {
+                font-size: 12px;
+            }
+            .mobile-hide {
+                display: none;
+            }
+            .icon-grid {
+                flex-direction: column;  /* ← 세로 정렬로 고정 */
+                align-items: center;
+                gap: 40px;               /* 아이콘 간격 */            
+            }
+            .icon-grid-wrapper {
+                margin-top: 30px;   /* ← 위로 조금 띄움 */
+                margin-bottom: 0;
+                flex: 0 0 auto;
+                padding-bottom: 0;
+                align-items: center; /* ← 세로 위 정렬 */
+            }
+
+
+            .icon-cell {
+                height: auto;
+                flex: none;            
+            }
+            .action-icon {
+                width: 180px;
+                height: 180px;
+            }
+
+             .action-icon.small-icon {
+                width: 125px !important; 
+                height: 125px !important;
+            }
+                
+            .social-btn img {
+                width: 18px;
+                height: 18px;
+            }
+
+        }
+        #author > p{
+            color:#333333;
+            text-align: right;
+            margin: 0 10px 0 0;
+           
+        }
+        #info {
+            color: gray;
+            text-align: center;
+        }
+        #realtext {
+            color: black;
+        }
+        .bar{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <main id="main">
+        <div class="stars"></div>
+        <div id="bigbox">
+            <div id="titlebar">
+                <div class="window-buttons">
+                    <button class="win-btn minimize" title="최소화"></button>
+                    <button class="win-btn maximize" title="최대화"></button>
+                    <button class="win-btn close" title="닫기"></button>
+                </div>
+            </div>
+
+        <div id="ie-box">
+            <h1 class="title">고철과 사랑의 인과관계를 설명하시오</h1>
+            <div id=document>
+                <p>아아아</p>
+            </div>
+         
+        </div>
+            <div id="taskbar">
+                <div class="taskbar-left">
+                    <span class="mobile-hide">Ver. 1.0.0 &nbsp;|</span>&nbsp;© 2025 Lonely Dream&nbsp;
+                    <span class="mobile-hide">-&nbsp; By 이연</span>
+                </div>
+                <div class="taskbar-right">
+                    <a href="https://x.com/lonelydream1024" target="_blank" title="Twitter" class="win-btn social-btn">
+                        <img src="https://cdn-icons-png.flaticon.com/24/733/733579.png" alt="Twitter" />
+                    </a>
+                    <div id="clock">--:--:--</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div id="disqus_thread"></div>
+                <script>
+                    /**
+                    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+                    /*
+                    var disqus_config = function () {
+                    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+                    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                    };
+                    */
+                    (function() { // DON'T EDIT BELOW THIS LINE
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://explain-android-and-love.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+            </div>
+        </div>
+    </main>
+
+<script>
+    let starsGenerated = false;
+
+    function updateClock() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clock').textContent =
+            `${String(hours).padStart(2, '0')}:${minutes}:${seconds}`;
+
+        updateBackground(hours);
+    }
+
+    function updateBackground(hours) {
+        const bodyEl = document.getElementById('main');
+        const starsContainer = document.querySelector('.stars');
+
+        if (hours >= 19 || hours < 7) {
+            bodyEl.classList.add('night-mode');
+            generateStars();
+        } else {
+            bodyEl.classList.remove('night-mode');
+            if (starsContainer) starsContainer.innerHTML = '';
+        }
+    }
+
+        function updateBackground(hours) {
+            const bodyEl = document.getElementById('main');
+            const starsContainer = document.querySelector('.stars');
+
+            if (hours >= 19 || hours < 7) {
+                bodyEl.classList.add('night-mode');
+                if (!starsGenerated) {
+                    generateStars();
+                    starsGenerated = true;
+                }
+            } else {
+                bodyEl.classList.remove('night-mode');
+                starsContainer.innerHTML = '';
+                starsGenerated = false;
+            }
+        }
+        function generateStars() {
+            const starsContainer = document.querySelector('.stars');
+            const numStars = 100;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                if (Math.random() < 0.3) {
+                    star.classList.add('yellow'); // 약간 노란 별들
+                }
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                starsContainer.appendChild(star);
+            }
+        }
+
+
+
+
+
+        function createShootingStar() {
+            const star = document.createElement('div');
+            star.classList.add('shooting-star');
+
+            // 랜덤한 위치 (상단 좌측 어딘가에서 시작)
+            star.style.top = `${Math.random() * 50}%`;
+            star.style.left = `${Math.random() * 50}%`;
+
+            document.querySelector('.stars').appendChild(star);
+
+            // 1초 후 제거
+            setTimeout(() => {
+                star.remove();
+            }, 1000);
+        }
+
+
+        updateClock();
+        setInterval(updateClock, 1000);
+        setInterval(() => {
+            const now = new Date();
+            const hour = now.getHours();
+            if (hour >= 19 || hour < 7) {
+                createShootingStar();
+            }
+        }, 1500);  // 3초 간격
+</script>
+</body>
+</html>
