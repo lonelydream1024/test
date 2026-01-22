@@ -108,6 +108,8 @@
             flex-direction: column;
             justify-content: flex-start; /* 제목은 위에 고정 */
             padding: 20px;
+            overflow-y: auto;
+            overflow: hidden;
         }
 
         #taskbar {
@@ -288,7 +290,15 @@
             box-shadow: none;
             padding: 0;
         }
-
+        #comments iframe {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        #content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
         @keyframes shooting {
             0% {
                 transform: translate(0, 0) rotate(315deg);
@@ -315,9 +325,9 @@
 
             #ie-box {
                 width: calc(100% - 16px);
-                height: calc(100% - 28px - 50px - 10px); /* 기존보다 더 넉넉하게 */                
+                height: auto;           
                 padding: 10px;
-                
+                overflow-y: auto;
                 overflow: hidden;
             }
 
@@ -382,6 +392,9 @@
         .bar{
             text-align: center;
         }
+        #content-scroll {
+        max-height: none;
+        }
     </style>
 </head>
 <body>
@@ -398,10 +411,10 @@
 
         <div id="ie-box">
             <h1 class="title">고철과 사랑의 인과관계를 설명하시오</h1>
-            <div id=document>
+            <div id="document">
                 <p>아아아</p>
             </div>
-            <div id="comments" style="margin-top:40px;">
+            <div id="comments">
                 <script src="https://utteranc.es/client.js"
                         repo="lonelydream/test"
                         issue-term="pathname"
