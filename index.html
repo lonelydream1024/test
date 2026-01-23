@@ -8,29 +8,30 @@
         * {
             box-sizing: border-box;
         }
-
+        html, body {
+            overflow-x: hidden;
+        }
         body {
             margin: 0;
             padding: 0;
         }
 
         main {
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            min-height: calc(100vh - 50px);
             background: linear-gradient(#00CCFF, #35D7FF, #69E2FF, #9EECFF, #D2F7FF);
             position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: block;
+            z-index: 1;
         }
 
         .night-mode {
             background: linear-gradient(to bottom, #000326, #001832, #003458, #2d6283, #6495ad);
         }
         .stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
             top: 0;
             left: 0;
             pointer-events: none;
@@ -62,6 +63,7 @@
         #bigbox {
             width: auto;
             height: auto;
+            margin: auto 0;
             background-color: lightgray;
             display: flex;
             flex-direction: column;
@@ -109,11 +111,13 @@
             justify-content: flex-start; /* 제목은 위에 고정 */
             padding: 20px;
             overflow-y: auto;
-            overflow: hidden;
         }
 
         #taskbar {
+            width: 100%; 
             height: 50px;
+            max-width: 100vw;
+            box-sizing: border-box;
             background: #C0C0C0;
             border-top: 2px solid white;
             border-left: 2px solid white;
@@ -304,6 +308,31 @@
         #comments {
             min-height: 200px;
         }
+        #comment-container {
+            position: relative;
+            overflow: visible;
+            z-index: 3;
+}
+
+        #toggle-comments {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 9999;
+            padding: 6px 14px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #C0C0C0;
+            border: 2px outset #fff;
+        }
+
+        #center-wrap {
+            min-height: calc(100vh - 50px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
 
         @keyframes shooting {
             0% {
@@ -317,7 +346,7 @@
         }
         @media (max-width: 768px) {
             #bigbox {
-                width: 90vw;
+                width: 100%;
                 height: auto;
                 flex-direction: column;
                 overflow: hidden;
@@ -338,6 +367,9 @@
             }
 
             #taskbar {
+                position: relative;
+                z-index: 5;                 /* 별보다 위 */
+                background: #C0C0C0;   
                 height: 50px;
                 font-size: 12px;
                 flex-shrink: 0;
@@ -406,47 +438,62 @@
 <body>
     <main id="main">
         <div class="stars"></div>
-        <div id="bigbox">
-            <div id="titlebar">
-                <div class="window-buttons">
-                    <button class="win-btn minimize" title="최소화"></button>
-                    <button class="win-btn maximize" title="최대화"></button>
-                    <button class="win-btn close" title="닫기"></button>
+        <div id="center-wrap">
+            <div id="bigbox">
+                <div id="titlebar">
+                    <div class="window-buttons">
+                        <button class="win-btn minimize" title="최소화"></button>
+                        <button class="win-btn maximize" title="최대화"></button>
+                        <button class="win-btn close" title="닫기"></button>
+                    </div>
                 </div>
-            </div>
+                <div id="ie-box">
+                    <h1 class="title">고철과 사랑의 인과관계를 설명하시오</h1>
+                    <div id="document">
+                        <p>아아아</p>
+                    </div>
+                    <button id="toggle-comments">댓글 보기</button>
+                    <div id="cusdis_thread"
+                        data-host="https://cusdis.com"
+                        data-app-id="51335419-fd18-4828-bca6-561de14ef7da"
+                        data-page-id="test"
+                        data-page-url="test"
+                        data-page-title="{{ PAGE_TITLE }}"
+                        data-lang="ko"
+                        data-height="100">
+                    </div>
+                    <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
 
-        <div id="ie-box">
-            <h1 class="title">고철과 사랑의 인과관계를 설명하시오</h1>
-            <div id="document">
-                <p>아아아</p>
-            </div>
-            <div id="comments">
-                <script src="https://utteranc.es/client.js"
-                        repo="lonelydream1024/test"
-                        issue-term="pathname"
-                        theme="github-light"
-                        crossorigin="anonymous"
-                        async>
-                </script>
-        </div>
-        </div>
-            <div id="taskbar">
-                <div class="taskbar-left">
-                    <span class="mobile-hide">Ver. 1.0.0 &nbsp;|</span>&nbsp;© 2025 Lonely Dream&nbsp;
-                    <span class="mobile-hide">-&nbsp; By 이연</span>
+                    <!-- <div id="comments" class="comments-collapsed">
+                        <script src="https://utteranc.es/client.js"
+                            repo="lonelydream1024/test"
+                            issue-term="pathname"
+                            theme="github-light"
+                            crossorigin="anonymous"
+                            async>
+                        </script>
+                    </div> -->
+
                 </div>
-                <div class="taskbar-right">
-                    <a href="https://x.com/lonelydream1024" target="_blank" title="Twitter" class="win-btn social-btn">
+                <div id="taskbar">
+                    <div class="taskbar-left">
+                        <span class="mobile-hide">Ver. 1.0.0 &nbsp;|</span>&nbsp;© 2025 Lonely Dream&nbsp;
+                        <span class="mobile-hide">-&nbsp; By 이연</span>
+                    </div>
+                    <div class="taskbar-right">
+                        <a href="https://x.com/lonelydream1024" target="_blank" title="Twitter" class="win-btn social-btn">
                         <img src="https://cdn-icons-png.flaticon.com/24/733/733579.png" alt="Twitter" />
-                    </a>
+                        </a>
                     <div id="clock">--:--:--</div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+        
 
 <script>
-    let starsGenerated = false;
+let starsGenerated = false;
 
     function updateClock() {
         const now = new Date();
@@ -465,29 +512,18 @@
 
         if (hours >= 19 || hours < 7) {
             bodyEl.classList.add('night-mode');
-            generateStars();
+            if (!starsGenerated) {
+                generateStars();
+                starsGenerated = true;
+        }
         } else {
             bodyEl.classList.remove('night-mode');
+            starsContainer.innerHTML = '';
             if (starsContainer) starsContainer.innerHTML = '';
+            starsGenerated = false;
+
         }
     }
-
-        function updateBackground(hours) {
-            const bodyEl = document.getElementById('main');
-            const starsContainer = document.querySelector('.stars');
-
-            if (hours >= 19 || hours < 7) {
-                bodyEl.classList.add('night-mode');
-                if (!starsGenerated) {
-                    generateStars();
-                    starsGenerated = true;
-                }
-            } else {
-                bodyEl.classList.remove('night-mode');
-                starsContainer.innerHTML = '';
-                starsGenerated = false;
-            }
-        }
         function generateStars() {
             const starsContainer = document.querySelector('.stars');
             const numStars = 100;
@@ -503,9 +539,6 @@
                 starsContainer.appendChild(star);
             }
         }
-
-
-
 
 
         function createShootingStar() {
@@ -534,6 +567,22 @@
                 createShootingStar();
             }
         }, 1500);  // 3초 간격
+        document.addEventListener("DOMContentLoaded", () => {
+        const btn = document.getElementById("toggle-comments");
+        const comments = document.getElementById("comments");
+
+        btn.addEventListener("click", () => {
+            const isHidden = comments.hasAttribute("hidden");
+
+            if (isHidden) {
+                comments.removeAttribute("hidden");
+                btn.textContent = "❌ 댓글 닫기";
+            } else {
+                comments.setAttribute("hidden", "");
+                btn.textContent = "💬 댓글 보기";
+            }
+        });
+    });
 </script>
 </body>
 </html>
