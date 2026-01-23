@@ -18,7 +18,7 @@
 
         main {
             width: 100%;
-            min-height: calc(100vh - 50px);
+            min-height: 100vh;
             background: linear-gradient(#00CCFF, #35D7FF, #69E2FF, #9EECFF, #D2F7FF);
             position: relative;
             display: block;
@@ -315,17 +315,17 @@
 }
 
         #toggle-comments {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 9999;
-            padding: 6px 14px;
+            position: absolute;
+            bottom: 10px;  /* ie-box 맨 아래에서 위쪽으로 10px */
+            right: 10px;   /* 오른쪽 끝 */
+            z-index: 20;
+            padding: 6px 12px;
             font-size: 14px;
             cursor: pointer;
-            background: #C0C0C0;
+            background: #E0E0E0;
             border: 2px outset #fff;
-        }
-
+            border-radius: 4px;
+        }        
         #center-wrap {
             min-height: calc(100vh - 50px);
             display: flex;
@@ -344,9 +344,10 @@
                 opacity: 0;
             }
         }
+
         @media (max-width: 768px) {
             #bigbox {
-                width: 100%;
+                width: 90%;
                 height: auto;
                 flex-direction: column;
                 overflow: hidden;
@@ -364,6 +365,7 @@
                 padding: 10px;
                 overflow-y: auto;
                 overflow: hidden;
+                position: relative;
             }
 
             #taskbar {
@@ -569,17 +571,17 @@ let starsGenerated = false;
         }, 1500);  // 3초 간격
         document.addEventListener("DOMContentLoaded", () => {
         const btn = document.getElementById("toggle-comments");
-        const comments = document.getElementById("comments");
-
+        const comments = document.getElementById("cusdis_thread");
+        
+        comments.style.display = "none";
+        
         btn.addEventListener("click", () => {
-            const isHidden = comments.hasAttribute("hidden");
-
-            if (isHidden) {
-                comments.removeAttribute("hidden");
-                btn.textContent = "❌ 댓글 닫기";
+            if (comments.style.display === "none") {
+                comments.style.display = "block";
+                btn.textContent = "댓글 닫기";
             } else {
-                comments.setAttribute("hidden", "");
-                btn.textContent = "💬 댓글 보기";
+                comments.style.display = "none";
+                btn.textContent = "댓글 보기";
             }
         });
     });
